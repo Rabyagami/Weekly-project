@@ -1,0 +1,79 @@
+# To add a new cell, type '# %%'
+# To add a new markdown cell, type '# %% [markdown]'
+# %%
+import pandas as pd 
+import re
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+
+# %%
+browser=webdriver.Chrome("/Users/Aulia/Documents/chromedriver")
+browser.get("https:/www.linkedin.com")
+
+
+# %%
+usernames = browser.find_element_by_id("username")
+usernames.send_keys("raby.yagami@gmail.com")
+passwords =browser.find_element_by_id("password")
+passwords.send_keys("rabyagami14")
+
+
+# %%
+login_botton = browser.find_element_by_class_name("login__form_action_container")
+login_botton.click()
+
+
+# %%
+browser.get("https://www.linkedin.com/jobs/")
+
+
+# %%
+job = browser.find_elements_by_class_name("job-card-square__title")
+c = []
+for i in job :
+    #print(i.text)
+    c.append(i.text)
+
+print(c)
+print()
+print(len(c))
+
+
+# %%
+job_title=[]
+for i in range (len(c)) :
+    job_title.append(c[i].strip("Job Title\n"))
+print(job_title)
+
+
+# %%
+job2=browser.find_elements_by_class_name("job-card-container__company-name")
+comp_name=[]
+for i in job2:
+    #print(i.text)
+    comp_name.append(i.text)
+print(comp_name)
+print()
+print(len(comp_name))
+
+
+# %%
+job3 = browser.find_elements_by_class_name("job-card-container__metadata-item")
+loc =[]
+for i in job3 :
+    #print(i.text)
+    loc.append(i.text)
+print(loc)
+print()
+print(len(loc))
+
+
+# %%
+col=["Company Name","Job title","Location"]
+df=pd.DataFrame({"Company Name": comp_name[slice(15)],"Job Title": job_title [slice(15)], "Location": loc [slice(15)]})
+df.head()
+
+
+# %%
+df.to_csv("LinkedIn Scrap Job.csv")
